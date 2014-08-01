@@ -20,12 +20,6 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
 
         var prompts = [
             {
-                type: 'confirm',
-                name: 'useRTDTheme',
-                message: 'Use the ReadTheDocs Theme?',
-                default: true
-            },
-            {
                 type: 'input',
                 name: 'projectName',
                 message: 'What would you like to call the project?',
@@ -42,14 +36,34 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
                 name: 'versionNumber',
                 message: 'What version is the project?',
                 default: '0.1.0'
+            },
+            {
+                type: 'confirm',
+                name: 'useRTDTheme',
+                message: 'Use the ReadTheDocs Theme?',
+                default: true
+            },
+            {
+                type: 'confirm',
+                name: 'installSphinx',
+                message: 'Install Sphinx (using ' + chalk.underline('pip install sphinx') + ')?',
+                default: false
+            },
+            {
+                type: 'confirm',
+                name: 'installAutobuild',
+                message: 'Install Sphinx Auto Build (using ' + chalk.underline('pip install sphinx-autobuild') + ')?',
+                default: false
             }
         ];
 
         this.prompt(prompts, function (props) {
-            this.useRTDTheme = props.useRTDTheme;
             this.projectName = props.projectName;
             this.authorName = props.authorName;
             this.versionNumber = props.versionNumber;
+            this.useRTDTheme = props.useRTDTheme;
+            this.installSphinx = props.installSphinx;
+            this.installAutobuild = props.installAutobuild;
 
             done();
         }.bind(this));
@@ -67,17 +81,10 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
 
         this.copy('source/_conf.py', 'source/conf.py');
         this.copy('source/_index.rst', 'source/index.rst');
-    },
-
-    gitignore: function() {
-        this.copy('_gitignore', '.gitignore');
-    },
-
-    firstPage: function() {
         this.copy('source/content/first-page.rst', 'source/content/first-page.rst')
-    },
 
-    makeFiles: function() {
+        // root level files
+        this.copy('_gitignore', '.gitignore');
         this.copy('_make.bat', 'make.bat');
         this.copy('_Makefile', 'Makefile');
     },
@@ -86,6 +93,20 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
         if (this.useRTDTheme) {
             // only copy over the theme if toggled ON
             this.directory('source/_themes', 'source/_themes');
+        }
+    },
+
+    installSphinx: function () {
+        if (this.installSphinx) {
+            // only install sphinx if asked too
+            this.spawnCommand('pip', ['install', 'sphinx'])
+        }
+    },
+
+    installAutobuild: function () {
+        if (this.installAutobuild) {
+            // only install sphinx-autobuild if asked too
+            this.spawnCommand('pip', ['install', 'sphinx-autobuild'])
         }
     }
 });
