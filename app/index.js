@@ -48,6 +48,12 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
                 name: 'installSphinx',
                 message: 'Install Sphinx (using ' + chalk.underline('pip install sphinx') + ')?',
                 default: false
+            },
+            {
+                type: 'confirm',
+                name: 'installAutobuild',
+                message: 'Install Sphinx Auto Build (using ' + chalk.underline('pip install sphinx-autobuild') + ')?',
+                default: false
             }
         ];
 
@@ -57,6 +63,7 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
             this.versionNumber = props.versionNumber;
             this.useRTDTheme = props.useRTDTheme;
             this.installSphinx = props.installSphinx;
+            this.installAutobuild = props.installAutobuild;
 
             done();
         }.bind(this));
@@ -93,6 +100,13 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
         if (this.installSphinx) {
             // only install sphinx if asked too
             this.spawnCommand('pip', ['install', 'sphinx'])
+        }
+    },
+
+    installAutobuild: function () {
+        if (this.installAutobuild) {
+            // only install sphinx-autobuild if asked too
+            this.spawnCommand('pip', ['install', 'sphinx-autobuild'])
         }
     }
 });
