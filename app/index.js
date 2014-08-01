@@ -20,12 +20,6 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
 
         var prompts = [
             {
-                type: 'confirm',
-                name: 'useRTDTheme',
-                message: 'Use the ReadTheDocs Theme?',
-                default: true
-            },
-            {
                 type: 'input',
                 name: 'projectName',
                 message: 'What would you like to call the project?',
@@ -42,14 +36,27 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
                 name: 'versionNumber',
                 message: 'What version is the project?',
                 default: '0.1.0'
+            },
+            {
+                type: 'confirm',
+                name: 'useRTDTheme',
+                message: 'Use the ReadTheDocs Theme?',
+                default: true
+            },
+            {
+                type: 'confirm',
+                name: 'installSphinx',
+                message: 'Install Sphinx (using ' + chalk.underline('pip install sphinx') + ')?',
+                default: false
             }
         ];
 
         this.prompt(prompts, function (props) {
-            this.useRTDTheme = props.useRTDTheme;
             this.projectName = props.projectName;
             this.authorName = props.authorName;
             this.versionNumber = props.versionNumber;
+            this.useRTDTheme = props.useRTDTheme;
+            this.installSphinx = props.installSphinx;
 
             done();
         }.bind(this));
@@ -86,6 +93,13 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
         if (this.useRTDTheme) {
             // only copy over the theme if toggled ON
             this.directory('source/_themes', 'source/_themes');
+        }
+    },
+
+    installSphinx: function () {
+        if (this.installSphinx) {
+            // only install sphinx if asked too
+            this.spawnCommand('pip', ['install', 'sphinx'])
         }
     }
 });
