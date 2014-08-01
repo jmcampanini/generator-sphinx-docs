@@ -74,17 +74,10 @@ var SphinxDocsGenerator = yeoman.generators.Base.extend({
 
         this.copy('source/_conf.py', 'source/conf.py');
         this.copy('source/_index.rst', 'source/index.rst');
-    },
-
-    gitignore: function() {
-        this.copy('_gitignore', '.gitignore');
-    },
-
-    firstPage: function() {
         this.copy('source/content/first-page.rst', 'source/content/first-page.rst')
-    },
 
-    makeFiles: function() {
+        // root level files
+        this.copy('_gitignore', '.gitignore');
         this.copy('_make.bat', 'make.bat');
         this.copy('_Makefile', 'Makefile');
     },
